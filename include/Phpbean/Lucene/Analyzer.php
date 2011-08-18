@@ -1,13 +1,13 @@
 <?php
 
-require_once 'Zend/Search/Lucene/Analysis/Analyzer/Common.php';
+require_once 'Zend/Search/Lucene/Analysis/Analyzer/Common/Utf8/CaseInsensitive.php';
 
-class Phpbean_Lucene_Analyzer extends Zend_Search_Lucene_Analysis_Analyzer_Common
+class Phpbean_Lucene_Analyzer
+    extends Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive
 {
 
     private $_position;
     private $_cnStopWords = array('的', '是', '地', '了');
-    private $_inputLength;
 
     /**
      *
@@ -43,10 +43,10 @@ class Phpbean_Lucene_Analyzer extends Zend_Search_Lucene_Analysis_Analyzer_Commo
             return null;
         }
 
-        $this->_inputLength = strlen($this->_input);
+        $len = strlen($this->_input);
 
-        while ($this->_position < $this->_inputLength) {
-            while ($this->_position < $this->_inputLength &&
+        while ($this->_position < $len) {
+            while ($this->_position < $len &&
             $this->_input[$this->_position] == ' ') {
                 $this->_position++;
             }
@@ -57,8 +57,8 @@ class Phpbean_Lucene_Analyzer extends Zend_Search_Lucene_Analysis_Analyzer_Commo
             $isCnWord = false;
             if (ord($temp_char) > 127) {
                 $i = 0;
-                while ($this->_position < $this->_inputLength &&
-                ord($this->_input[$this->_position]) > 127) {
+                while ($this->_position < $len
+                        && ord($this->_input[$this->_position]) > 127) {
                     $this->_position = $this->_position + 3;
                     $i++;
                     if ($i == 2) {
@@ -68,14 +68,14 @@ class Phpbean_Lucene_Analyzer extends Zend_Search_Lucene_Analysis_Analyzer_Commo
                 }
                 if ($i == 1)
                     continue;
-            }elseif (47 < ord($temp_char) && ord($temp_char) < 58) {
-                while ($this->_position < $this->_inputLength &&
-                ctype_digit($this->_input[$this->_position])) {
+            } elseif (47 < ord($temp_char) && ord($temp_char) < 58) {
+                while ($this->_position < $len
+                        && ctype_digit($this->_input[$this->_position])) {
                     $this->_position++;
                 }
             } else {
-                while ($this->_position < $this->_inputLength &&
-                ctype_alpha($this->_input[$this->_position])) {
+                while ($this->_position < $len
+                        && ctype_alpha($this->_input[$this->_position])) {
                     $this->_position++;
                 }
             }
