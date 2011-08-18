@@ -18,4 +18,4 @@ $indexDir = realpath(__DIR__ . '/index');
 $htmlDir = realpath(__DIR__ . '/html');
 
 // 設定預設的分詞分析器
-Zend_Search_Lucene_Analysis_Analyzer::setDefault(new My_Lucene_Analyzer());
+Zend_Search_Lucene_Analysis_Analyzer::setDefault(new Phpbean_Lucene_Analyzer());
